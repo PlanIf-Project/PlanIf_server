@@ -5,7 +5,7 @@ import usuariosRouter from './routers/usuarios-router'
 // Porta do servidor
 const PORT = process.env.PORT || 4000
 // Host do servidor
-const HOSTNAME = 'http://localhost'
+const HOSTNAME = process.env.HOSTNAME || 'http://localhost'
 // App Express
 const app = express()
 // JSON
@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 })
 // Cors
 app.use(cors({
-    origin: ['http://localhost:3000']
+    origin: ['http://localhost:5173']
 }))
 
 app.use('/api', usuariosRouter)
