@@ -3,9 +3,9 @@ const DBSOURCE = 'db.sqlite'
 const SQL_USUARIOS_CREATE = `
     CREATE TABLE usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nome TEXT,
-        email TEXT,
-        senha TEXT
+        nome TEXT NOT NULL,
+        email TEXT NOT NULL,
+        senha TEXT NOT NULL
     )`
 const database = new sqlite3.Database(DBSOURCE, (err) => {
     if (err) {

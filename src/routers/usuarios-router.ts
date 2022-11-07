@@ -7,7 +7,7 @@ usuariosRouter.post('/usuarios', (req, res) => {
     const usuario: Usuario = req.body
     usuariosPersistencia.criar(usuario, (id) => {
         if (id) {
-            res.status(201).location(`/usuarios/${id}`).send()
+            res.json(id).send()
         } else {
             res.status(400).send()
         }
