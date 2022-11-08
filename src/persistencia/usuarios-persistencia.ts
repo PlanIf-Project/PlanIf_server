@@ -37,6 +37,11 @@ const usuariosPersistencia = {
         const sql = 'SELECT * FROM usuarios WHERE email = ? AND senha = ?';
         const params = [usuario.email, usuario.senha];
         database.get(sql, params, (_err, row) => callback(row));
+    },
+    getEmail: (email: string, callback: (usuario?: Usuario) => void) => {
+        const sql = 'SELECT * FROM usuarios WHERE email = ?';
+        const params = [email];
+        database.get(sql, params, (_err, row) => callback(row));
     }
 }
 

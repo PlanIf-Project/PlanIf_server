@@ -6,11 +6,18 @@ const usuariosRouter = express.Router()
 
 usuariosRouter.post('/criarUsuario', (req, res) => {
     const usuario: Usuario = req.body;
-    usuariosPersistencia.criar(usuario, (id) => {
-        if (id) {
-            res.json(id).send();
-        } else {
-            res.status(400).send();
+    usuariosPersistencia.getEmail(usuario.email, (user) => {
+        if(!user) {
+            usuariosPersistencia.criar(usuario, (id) => {
+                if (id) {
+                    res.json(id).send();
+                } else {
+                    res.status(400).send();
+                }
+            });
+        }
+        else {
+            res.status(400).send("Email já cadastrado!");
         }
     });
 });
@@ -30,13 +37,13 @@ usuariosRouter.get('/verUsuario/:id', (req, res) => {
     });
 });
 
-usuariosRouter.put('/atualizarUsuario', (req, res) => {
+usuariosRouter.put('/editarUsuario', (req, res) => {
     const id: number = req.body.id;
     usuariosPersistencia.atualizar(id, req.body, (notFound) => {
         if (notFound) {
             res.status(404).send();
         } else {
-            res.status(204).send();
+            res.json(id).send();
         }
     });
 });
@@ -58,7 +65,7 @@ usuariosRouter.post('/login', (req, res) => {
         if (user) {
             res.json(user);
         } else {
-            res.status(404).send();
+            res.status(404).send("Usuário não cadastrado!");
         }
     });
 });
