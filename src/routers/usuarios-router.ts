@@ -48,8 +48,8 @@ usuariosRouter.put('/editarUsuario', (req, res) => {
     });
 });
 
-usuariosRouter.delete('/apagarUsuario', (req, res) => {
-    const id: number = req.body.id;
+usuariosRouter.delete('/excluirUsuario/:id', (req, res) => {
+    const id: number =+req.params.id;
     usuariosPersistencia.apagar(id, (notFound) => {
         if (notFound) {
             res.status(404).send();
