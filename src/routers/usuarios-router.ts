@@ -1,6 +1,8 @@
-import express from 'express'
-import Usuario from '../models/usuario'
-import usuariosPersistencia from '../persistencia/usuarios-persistencia'
+const jwt = require('jsonwebtoken');
+import express from 'express';
+import Usuario from '../models/usuario';
+import Auth from '../persistencia/auth';
+import usuariosPersistencia from '../persistencia/usuarios-persistencia';
 
 const usuariosRouter = express.Router()
 
@@ -22,7 +24,7 @@ usuariosRouter.post('/criarUsuario', (req, res) => {
     });
 });
 
-usuariosRouter.get('/listarUsuarios', (req, res) => {
+usuariosRouter.get('/listarUsuarios', Auth, (req, res) => {
     usuariosPersistencia.lerTodos((usuarios) => res.json(usuarios));
 });
 
@@ -60,14 +62,23 @@ usuariosRouter.delete('/excluirUsuario/:id', (req, res) => {
 });
 
 usuariosRouter.post('/login', (req, res) => {
-    const usuario: Usuario = req.body;
-    usuariosPersistencia.login(usuario, (user) => {
-        if (user) {
-            res.json(user);
-        } else {
-            res.status(404).send("Usuário não cadastrado!");
-        }
-    });
+    try {
+        const usuario: Usuario = req.body;
+        usuariosPersistencia.login(usuario, (user) => {
+            if (user) {
+                const token = jwt.sign(user, process.env.TOKEN_KEY, 
+                    {expiresIn: '3h' }
+                );
+                console.log(token)
+                user.token = token;
+                res.status(200).json(user);
+            } else {
+                res.status(404).send("Usuário não cadastrado!");
+            }
+        });
+    } catch(err) {
+        console.log(err);
+    }
 });
 
 export default usuariosRouter
