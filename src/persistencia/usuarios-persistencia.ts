@@ -2,11 +2,11 @@ import Usuario from '../models/usuario';
 import database from './database';
 
 const usuariosPersistencia = {
-    criar: (usuario: Usuario, callback: (id?: number) => void) => {
+    criar: (usuario: Usuario, callback: (user?: Usuario) => void) => {
         const sql = 'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)';
         const params = [usuario.nome, usuario.email, usuario.senha];
         database.run(sql, params, function(_err) {
-            callback(this?.lastID);
+            database.get(sql, params, (_err, row) => callback(row));
         });
     },
     lerTodos: (callback: (usuarios: Usuario[]) => void) => {
