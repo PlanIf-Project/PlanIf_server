@@ -33,7 +33,7 @@ usuariosRouter.get('/listarUsuarios', Auth, (req, res) => {
     usuariosPersistencia.lerTodos((usuarios) => res.json(usuarios));
 });
 
-usuariosRouter.get('/verUsuario/:id', (req, res) => {
+usuariosRouter.get('/verUsuario/:id', Auth, (req, res) => {
     const id: number = +req.params.id;
     usuariosPersistencia.ler(id, (usuario) => {
         if (usuario) {
@@ -44,7 +44,7 @@ usuariosRouter.get('/verUsuario/:id', (req, res) => {
     });
 });
 
-usuariosRouter.put('/editarUsuario', (req, res) => {
+usuariosRouter.put('/editarUsuario', Auth, (req, res) => {
     const id: number = req.body.id;
     usuariosPersistencia.atualizar(id, req.body, (notFound) => {
         if (notFound) {
@@ -55,7 +55,7 @@ usuariosRouter.put('/editarUsuario', (req, res) => {
     });
 });
 
-usuariosRouter.delete('/excluirUsuario/:id', (req, res) => {
+usuariosRouter.delete('/excluirUsuario/:id', Auth, (req, res) => {
     const id: number =+req.params.id;
     usuariosPersistencia.apagar(id, (notFound) => {
         if (notFound) {
@@ -74,7 +74,6 @@ usuariosRouter.post('/login', (req, res) => {
                 const token = jwt.sign(user, process.env.TOKEN_KEY, 
                     {expiresIn: '3h' }
                 );
-                console.log(token)
                 user.token = token;
                 res.status(200).json(user);
             } else {
@@ -86,4 +85,4 @@ usuariosRouter.post('/login', (req, res) => {
     }
 });
 
-export default usuariosRouter
+export default usuariosRouter;
