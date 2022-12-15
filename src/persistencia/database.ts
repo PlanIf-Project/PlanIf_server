@@ -9,6 +9,15 @@ const SQL_USUARIOS_CREATE = `
         senha TEXT NOT NULL
     )`;
 
+const SQL_TAREFAS_CREATE = `
+    CREATE TABLE tarefas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        data DATE,
+        responsavel TEXT,
+        descricao TEXT
+    )`;
+
 const database = new sqlite3.Database(DBSOURCE, (err) => {
     if (err) {
         console.error(err.message)
@@ -20,7 +29,12 @@ const database = new sqlite3.Database(DBSOURCE, (err) => {
                 console.log('Tabela usuarios criada com sucesso.');
             } 
         });
+        database.run(SQL_TAREFAS_CREATE, (err) => {
+            if (!err) {
+                console.log('Tabela tarefas criada com sucesso.');
+            } 
+        });
     }
 });
 
-export default database
+export default database;

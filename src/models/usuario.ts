@@ -5,4 +5,4 @@ type Usuario = {
     senha: string
     token?: string
 }
-export default Usuario
+export default Usuario;
