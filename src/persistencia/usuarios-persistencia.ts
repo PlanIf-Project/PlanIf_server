@@ -6,7 +6,11 @@ const usuariosPersistencia = {
         const sql = 'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)';
         const params = [usuario.nome, usuario.email, usuario.senha];
         database.run(sql, params, function(_err) {
-            database.get(sql, params, (_err, row) => callback(row));
+            const sql1 = 'SELECT * FROM usuarios WHERE id = ?';
+            database.get(sql1, [this.lastID], (_err2, row) => {
+                callback(row);
+            });
+           
         });
     },
     lerTodos: (callback: (usuarios: Usuario[]) => void) => {
