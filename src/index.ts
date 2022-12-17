@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import usuariosRouter from './routers/usuarios-router';
+import tarefasRouter from './routers/tarefas-router';
 require('dotenv/config');
 
 const PORT = process.env.PORT || 4000;
@@ -16,6 +17,7 @@ app.use(cors({
 }))
 
 app.use('/usuarios', usuariosRouter);
+app.use('/tarefas', tarefasRouter);
 
 app.use((req, res) => {
     res.status(404)
