@@ -3,5 +3,6 @@ type Usuario = {
     nome: string
     email: string
     senha: string
+    token?: string
 }
-export default Usuario
+export default Usuario;

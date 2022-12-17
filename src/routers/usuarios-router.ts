@@ -1,49 +1,88 @@
-import express from 'express'
-import Usuario from '../models/usuario'
-import usuariosPersistencia from '../persistencia/usuarios-persistencia'
+const jwt = require('jsonwebtoken');
+import express from 'express';
+import Usuario from '../models/usuario';
+import Auth from '../persistencia/auth';
+import usuariosPersistencia from '../persistencia/usuarios-persistencia';
 
 const usuariosRouter = express.Router()
-usuariosRouter.post('/usuarios', (req, res) => {
-    const usuario: Usuario = req.body
-    usuariosPersistencia.criar(usuario, (id) => {
-        if (id) {
-            res.status(201).location(`/usuarios/${id}`).send()
-        } else {
-            res.status(400).send()
+
+usuariosRouter.post('/criarUsuario', (req, res) => {
+    const usuario: Usuario = req.body;
+    usuariosPersistencia.getEmail(usuario.email, (user) => {
+        if(!user) {
+            usuariosPersistencia.criar(usuario, (criado) => {
+                console.log(criado)
+                if (criado) {
+                    const token = jwt.sign(criado, process.env.TOKEN_KEY, 
+                        {expiresIn: '3h' }
+                    );
+                    criado.token = token;
+                    res.status(200).json(criado);
+                } else {
+                    res.status(400).send();
+                }
+            });
         }
-    })
-})
-usuariosRouter.get('/usuarios', (req, res) => {
-    usuariosPersistencia.lerTodos((usuarios) => res.json(usuarios))
-})
-usuariosRouter.get('/usuarios/:id', (req, res) => {
-    const id: number = +req.params.id
+        else {
+            res.status(400).send("Email já cadastrado!");
+        }
+    });
+});
+
+usuariosRouter.get('/listarUsuarios', Auth, (req, res) => {
+    usuariosPersistencia.lerTodos((usuarios) => res.json(usuarios));
+});
+
+usuariosRouter.get('/verUsuario/:id', Auth, (req, res) => {
+    const id: number = +req.params.id;
     usuariosPersistencia.ler(id, (usuario) => {
         if (usuario) {
-            res.json(usuario)
+            res.json(usuario);
         } else {
-            res.status(404).send()
+            res.status(404).send();
         }
-    })
-})
-usuariosRouter.put('/usuarios/:id', (req, res) => {
-    const id: number = +req.params.id
+    });
+});
+
+usuariosRouter.put('/editarUsuario', Auth, (req, res) => {
+    const id: number = req.body.id;
     usuariosPersistencia.atualizar(id, req.body, (notFound) => {
         if (notFound) {
-            res.status(404).send()
+            res.status(404).send();
         } else {
-            res.status(204).send()
+            res.json(id).send();
         }
-    })
-})
-usuariosRouter.delete('/usuarios/:id', (req, res) => {
-    const id: number = +req.params.id
+    });
+});
+
+usuariosRouter.delete('/excluirUsuario/:id', Auth, (req, res) => {
+    const id: number =+req.params.id;
     usuariosPersistencia.apagar(id, (notFound) => {
         if (notFound) {
-            res.status(404).send()
+            res.status(404).send();
         } else {
-            res.status(204).send()
+            res.status(204).send();
         }
-    })
-})
-export default usuariosRouter
+    });
+});
+
+usuariosRouter.post('/login', (req, res) => {
+    try {
+        const usuario: Usuario = req.body;
+        usuariosPersistencia.login(usuario, (user) => {
+            if (user) {
+                const token = jwt.sign(user, process.env.TOKEN_KEY, 
+                    {expiresIn: '3h' }
+                );
+                user.token = token;
+                res.status(200).json(user);
+            } else {
+                res.status(404).send("Usuário não cadastrado!");
+            }
+        });
+    } catch(err) {
+        console.log(err);
+    }
+});
+
+export default usuariosRouter;
