@@ -13,9 +13,9 @@ const tarefasPersistencia = {
            
         });
     },
-    lerTodos: (callback: (tarefas: Tarefa[]) => void) => {
-        const sql = 'SELECT * FROM tarefas';
-        const params: any[] = [];
+    lerTodos: (idUsuario: number, callback: (tarefas: Tarefa[]) => void) => {
+        const sql = 'SELECT * FROM tarefas WHERE idUsuario = ?';
+        const params = [idUsuario];
         database.all(sql, params, (_err, rows) => callback(rows));
     },
     ler: (id: number, callback: (tarefa?: Tarefa) => void) => {
@@ -24,8 +24,8 @@ const tarefasPersistencia = {
         database.get(sql, params, (_err, row) => callback(row));
     },
     atualizar: (id: number, tarefa: Tarefa, callback: (notFound: boolean) => void) => {
-        const sql = 'UPDATE tarefas SET nome = ?, data = ?, descricao = ?, idUsuario = ? WHERE id = ?';
-        const params = [tarefa.nome, tarefa.data, tarefa.descricao, tarefa.idUsuario, id];
+        const sql = 'UPDATE tarefas SET nome = ?, data = ?, descricao = ? WHERE id = ?';
+        const params = [tarefa.nome, tarefa.data, tarefa.descricao, id];
         database.run(sql, params, function(_err) {
             callback(this.changes === 0);
         })

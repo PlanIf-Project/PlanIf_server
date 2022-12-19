@@ -7,6 +7,7 @@ const tarefasRouter = express.Router()
 
 tarefasRouter.post('/criarTarefa', Auth, (req, res) => {
     const tarefa: Tarefa = req.body;
+    console.log(tarefa)
     tarefasPersistencia.criar(tarefa, (t) => {
         if (t) {
             res.status(200).json(t);
@@ -16,8 +17,9 @@ tarefasRouter.post('/criarTarefa', Auth, (req, res) => {
     });
 });
 
-tarefasRouter.get('/listarTarefas', Auth, (req, res) => {
-    tarefasPersistencia.lerTodos((tarefas) => res.json(tarefas));
+tarefasRouter.get('/listarTarefas/:idUsuario', Auth, (req, res) => {
+    const idUsuario: number = +req.params.idUsuario;
+    tarefasPersistencia.lerTodos(idUsuario, (tarefas) => res.json(tarefas));
 });
 
 tarefasRouter.get('/verTarefa/:id', Auth, (req, res) => {
