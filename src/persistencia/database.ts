@@ -13,7 +13,9 @@ const SQL_TAREFAS_CREATE = `
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT NOT NULL,
         data DATE,
-        descricao TEXT
+        descricao TEXT,
+        idUsuario INTEGER NOT NULL
+        foreign key(idUsuario) references usuarios(id)
     )`;
 
 const database = new sqlite3.Database(DBSOURCE, (err) => {
