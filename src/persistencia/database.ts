@@ -14,6 +14,7 @@ const SQL_TAREFAS_CREATE = `
         nome TEXT NOT NULL,
         data DATE,
         descricao TEXT,
+        feito BOOLEAN,
         idUsuario INTEGER NOT NULL,
         foreign key(idUsuario) references usuarios(id)
     )`;

@@ -7,7 +7,6 @@ const tarefasRouter = express.Router()
 
 tarefasRouter.post('/criarTarefa', Auth, (req, res) => {
     const tarefa: Tarefa = req.body;
-    console.log(tarefa)
     tarefasPersistencia.criar(tarefa, (t) => {
         if (t) {
             res.status(200).json(t);

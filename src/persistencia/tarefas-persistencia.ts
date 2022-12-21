@@ -3,8 +3,8 @@ import database from './database';
 
 const tarefasPersistencia = {
     criar: (tarefa: Tarefa, callback: (t?: Tarefa) => void) => {
-        const sql = 'INSERT INTO tarefas (nome, data, descricao, idUsuario) VALUES (?, ?, ?, ?)';
-        const params = [tarefa.nome, tarefa.data, tarefa.descricao, tarefa.idUsuario];
+        const sql = 'INSERT INTO tarefas (nome, data, descricao, feito, idUsuario) VALUES (?, ?, ?, ?, ?)';
+        const params = [tarefa.nome, tarefa.data, tarefa.descricao, tarefa.descricao, tarefa.idUsuario];
         database.run(sql, params, function(_err) {
             const sql1 = 'SELECT * FROM tarefas WHERE id = ?';
             database.get(sql1, [this.lastID], (_err2, row) => {
@@ -24,8 +24,8 @@ const tarefasPersistencia = {
         database.get(sql, params, (_err, row) => callback(row));
     },
     atualizar: (id: number, tarefa: Tarefa, callback: (notFound: boolean) => void) => {
-        const sql = 'UPDATE tarefas SET nome = ?, data = ?, descricao = ? WHERE id = ?';
-        const params = [tarefa.nome, tarefa.data, tarefa.descricao, id];
+        const sql = 'UPDATE tarefas SET nome = ?, data = ?, feito = ?, descricao = ? WHERE id = ?';
+        const params = [tarefa.nome, tarefa.data, tarefa.feito, tarefa.descricao, id];
         database.run(sql, params, function(_err) {
             callback(this.changes === 0);
         })
