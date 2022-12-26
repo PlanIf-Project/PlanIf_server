@@ -11,7 +11,6 @@ usuariosRouter.post('/criarUsuario', (req, res) => {
     usuariosPersistencia.getEmail(usuario.email, (user) => {
         if(!user) {
             usuariosPersistencia.criar(usuario, (criado) => {
-                console.log(criado)
                 if (criado) {
                     const token = jwt.sign(criado, process.env.TOKEN_KEY, 
                         {expiresIn: '3h' }
