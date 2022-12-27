@@ -19,6 +19,15 @@ const SQL_TAREFAS_CREATE = `
         foreign key(idUsuario) references usuarios(id)
     )`;
 
+const SQL_DISCIPLINAS_CREATE = `
+    CREATE TABLE disciplinas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        descricao TEXT,
+        idUsuario INTEGER NOT NULL,
+        foreign key(idUsuario) references usuarios(id)
+    )`;
+
 const database = new sqlite3.Database(DBSOURCE, (err) => {
     if (err) {
         console.error(err.message)
@@ -33,6 +42,11 @@ const database = new sqlite3.Database(DBSOURCE, (err) => {
         database.run(SQL_TAREFAS_CREATE, (err) => {
             if (!err) {
                 console.log('Tabela tarefas criada com sucesso.');
+            } 
+        });
+        database.run(SQL_DISCIPLINAS_CREATE, (err) => {
+            if (!err) {
+                console.log('Tabela disciplinas criada com sucesso.');
             } 
         });
     }

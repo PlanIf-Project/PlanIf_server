@@ -5,4 +5,4 @@
 * Rode o projeto: ``` npm run dev ```
 
 #### Obs.:
-* O projeto ainda está sendo implementado, então atualmente só tem funcionalidades que dizem respeito ao perfil e as tarefas.
+* O projeto ainda está sendo implementado, então atualmente só tem funcionalidades que dizem respeito ao perfil, as tarefas e as disciplinas.
